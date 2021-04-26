@@ -84,7 +84,7 @@ sub send_help {
     my $response = HTTP::Response->new();
     $response->code(200);
     $response->message("OK");
-    $response->content("Following endpoints are available:\n\t/playlist\tfor full m3u-file\n\t/channel?id=\tfor master.m3u8 of specific channel\n\t/epg\t\tfor xmltv-epg-file\n");
+    $response->content("Following endpoints are available:\n\t/playlist\tfor full m3u-file\n\t/master3u8?id=\tfor master.m3u8 of specific channel\n\tchannel?id=\tfor stream of channel-data (experimental)\n\t/epg\t\tfor xmltv-epg-file\n");
 
     $client->send_response($response);
 }
@@ -412,7 +412,6 @@ sub process_request {
     $apiurl =~ s/{from}/$from/ig;
     $apiurl =~ s/{to}/$to/ig;
 
-    my $loop = 0;
     my $client = $_[0];
     my $request;
 
