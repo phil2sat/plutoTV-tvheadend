@@ -6,7 +6,6 @@ $| = 1;
 
 use strict;
 use warnings;
-use threads;
 
 $SIG{PIPE} = sub {
     print "Got sigpipe \n";
@@ -37,8 +36,8 @@ my $apiurl = "http://api.pluto.tv/v2/channels";
 my $deviceid = uuid_to_string(create_uuid(UUID_V1));
 my $ffmpeg = which 'ffmpeg';
 my $streamlink = which 'streamlink';
-our $session;
-our $bootTime;
+$server::session = get_bootJson();
+$server::bootTime = DateTime->now();;
 
 #check param
 my $localhost = grep { $_ eq '--localonly'} @ARGV;
@@ -186,9 +185,9 @@ sub getBootFromPluto {
     $useragent->agent('Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:86.0) Gecko/20100101 Firefox/86.0');
     my $response = $useragent->request($request);
     if ($response->is_success) {
-        $session = parse_json($response->decoded_content);
-        $bootTime = DateTime->now();
-        return $session;
+        $server::session = parse_json($response->decoded_content);
+        $server::bootTime = DateTime->now();
+        return $server::session;
     }
     else {
         return ();
@@ -199,20 +198,20 @@ sub get_bootJson {
     my $now = DateTime->now();
     my $maxTime;
 
-    if(defined $session) {
-        $maxTime = $bootTime->add(seconds=>$session->{session}->{restartThresholdMS}/1000);
+    if(defined $server::session) {
+        $maxTime = $server::bootTime->add(seconds=>$server::session->{session}->{restartThresholdMS}/1000);
     }
     else {
         $maxTime = $now->subtract(hours=>2);
     }
 
-    if(!defined $session) {
-      $session = getBootFromPluto;
+    if(!defined $server::session) {
+      $server::session = getBootFromPluto;
     }
     elsif($now > $maxTime) {
-      $session = getBootFromPluto;
+      $server::session = getBootFromPluto;
     }
-    return $session;
+    return $server::session;
 }
 
 sub send_m3ufile {
@@ -457,11 +456,11 @@ my $daemon = HTTP::Daemon->new(
     ReusePort => $port,
 ) or die "Server could not be started.\n\n";
 
-$session = get_bootJson;
+$server::session = get_bootJson();
 
 printf("Server started listening on $hostip using port ".$port."\n");
 while (my $client = $daemon->accept) {
-    if(forkProcess == 1) {
+    if(forkProcess() == 1) {
         process_request($client);
         exit(0);
     }
