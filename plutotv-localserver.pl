@@ -300,7 +300,7 @@ sub removeAdsFromPlaylist {
         my $line = substr($playlist, $linebreakpos+1, index($playlist, "\n", $linebreakpos+1)-$linebreakpos);
         if(substr($line, 0, 18) eq "#EXT-X-DISCONTINUITY") {
             $m3u8 .= "#EXT-X-ENDLIST\n";
-            break;
+            last;
         }
         else {
             if(substr($line, 0, 7) eq "#EXTINF") {
