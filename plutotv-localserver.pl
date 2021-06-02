@@ -224,7 +224,7 @@ sub send_m3ufile {
     my $m3uContent = buildM3U(@senderListe);
     my $response = HTTP::Response->new();
     $response->header("content-type", "audio/x-mpegurl");
-    $response->header("content-disposition", "filename=\"plutotv.m3u\"");
+    $response->header("content-disposition", "filename=\"plutotv.m3u8\"");
     $response->code(200);
     $response->message("OK");
     $response->content($m3uContent);
