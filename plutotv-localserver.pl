@@ -299,18 +299,13 @@ sub removeAdsFromPlaylist {
         }
         my $line = substr($playlist, $linebreakpos+1, index($playlist, "\n", $linebreakpos+1)-$linebreakpos);
         if(substr($line, 0, 18) eq "#EXT-X-DISCONTINUITY") {
-            $writeline = 0;
+            continue;
         }
-        if($writeline == 1) {
+        else {
             if(substr($line, 0, 7) eq "#EXTINF") {
                 $targetduration++;
             }
             $m3u8 .= $line;
-        }
-        else {
-            if(substr($line, 0, 4) eq "http") {
-              $writeline = 1;
-            }
         }
         $linebreakpos = index($playlist, "\n", $linebreakpos+1);
     }
