@@ -299,7 +299,8 @@ sub removeAdsFromPlaylist {
         }
         my $line = substr($playlist, $linebreakpos+1, index($playlist, "\n", $linebreakpos+1)-$linebreakpos);
         if(substr($line, 0, 18) eq "#EXT-X-DISCONTINUITY") {
-            continue;
+            $m3u8 .= "#EXT-X-ENDLIST\n";
+            break;
         }
         else {
             if(substr($line, 0, 7) eq "#EXTINF") {
@@ -309,7 +310,7 @@ sub removeAdsFromPlaylist {
         }
         $linebreakpos = index($playlist, "\n", $linebreakpos+1);
     }
-    my $returnlist = $opening."#EXT-X-TARGETDURATION:".$targetduration."\n#EXT-X-DISCONTINUITY-SEQUENCE:0\n".$m3u8;
+    my $returnlist = $opening."#EXT-X-TARGETDURATION:".$targetduration."\n".$m3u8;
     return $returnlist;
 }
 
