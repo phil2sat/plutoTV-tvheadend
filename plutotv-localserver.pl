@@ -182,7 +182,7 @@ sub buildM3U {
                     $url =~ s/&sid=/&sid=\{uuid\}&sessionID=\{uuid\}/ig;
                     $url =~ s/&deviceDNT=0/&deviceDNT=false/ig;
                     $url = $url."&serverSideAds=false&terminate=false&clientDeviceType=0&clientModelNumber=na&clientID=".$deviceid;
-                    $m3u .= $url;
+                    $m3u .= $url."\n";
                 }
                 else {
                     $m3u .= "pipe://" . $ffmpeg . " -loglevel fatal -threads 2 -re -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" -c copy -fflags +genpts+ignidx+igndts -vcodec copy -acodec copy -mpegts_copyts 1 -f mpegts -tune zerolatency -mpegts_flags +initial_discontinuity -mpegts_service_type advanced_codec_digital_hdtv -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
