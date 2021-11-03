@@ -11,7 +11,7 @@ There are two ways to use these scripts:
 `sudo cpan install DateTime DateTime::Format::Strptime JSON JSON:Parse HTTP::Request URI::Escape LWP::UserAgent UUID::Tiny File::Which`
 
 when using `plutotv-localserver.pl` also:
-`sudo cpan install HTTP::Request::Params HTTP::Deamon HTTP::Status HTTP::Requst::Common HTTP::Cookies Net::Address::IP::Local`
+`sudo `cpan install HTTP::Request::Params HTTP::Deamon HTTP::Status HTTP::Requst::Common HTTP::Cookies Net::Address::IP::Local
 
 
 ## usage
@@ -21,7 +21,7 @@ when using `plutotv-localserver.pl` also:
 `perl plutotv-localserver.pl [--usestreamlink] [--localonly] [--directstreaming]` (or start as systemd-daemon)
 
 ### meaning of params
-|parameter | effect |
+| parameter | effect |
 |-|-|
 | `--createm3u` | use with `perl-generate.pl` only, create playlist-file plutotv.m3u8 and xmltv-file plutotv-epg.xml |
 | `--usebash` | use with `perl-generate.pl` only, create bash-file for each pluto-tv-channel for starting service |
@@ -29,6 +29,7 @@ when using `plutotv-localserver.pl` also:
 | `--usestreamlink` | same as `--useffmpeg`, but using `streamlink` instead of ffmpeg |
 | `--localonly` | use with `plutotv-localserver` only, will configure server to listen on localhost 127.0.0.1 |
 | `--directstreaming` | use with `plutotv-localserver` only, delivers m3u with URL to stream from localserver |
+| `--original` | use with `plutotv-localserver` only, master.m3u8 contains links to original plutotv-m3u8 | 
 
 ### available endpoints for localserver
 |endpoint | task |

@@ -43,6 +43,7 @@ $server::bootTime = DateTime->now();;
 my $localhost = grep { $_ eq '--localonly'} @ARGV;
 my $usestreamlink = grep { $_ eq '--usestreamlink'} @ARGV;
 my $directstreaming = grep { $_ eq '--directstreaming'} @ARGV;
+my $original = grep { $_ eq '--original'} @ARGV;
 
 sub forkProcess {
   my $pid = fork;
@@ -168,6 +169,9 @@ sub buildM3U {
                 $m3u = $m3u . "#EXTINF:-1 tvg-chno=\"" . $sender->{number} . "\" tvg-id=\"" . uri_escape($sender->{name}) . "\" tvg-name=\"" . $sender->{name} . "\" tvg-logo=\"" . $logo . "\" group-title=\"PlutoTV\"," . $sender->{name} . "\n";
                 if($directstreaming || $usestreamlink) {
                     $m3u .= "http://".$hostip.":$port/channel?id=$sender->{_id}\n";
+                }
+                elsif($original) {
+                  $m3u .= $sender-> $sender->{stitched}->{urls}[0]->{url};
                 }
                 else {
                     $m3u .= "pipe://" . $ffmpeg . " -loglevel fatal -threads 2 -re -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" -c copy -fflags +genpts+ignidx+igndts -vcodec copy -acodec copy -mpegts_copyts 1 -f mpegts -tune zerolatency -mpegts_flags +initial_discontinuity -mpegts_service_type advanced_codec_digital_hdtv -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
