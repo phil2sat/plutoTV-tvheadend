@@ -171,7 +171,18 @@ sub buildM3U {
                     $m3u .= "http://".$hostip.":$port/channel?id=$sender->{_id}\n";
                 }
                 elsif($original) {
-                  $m3u .= $sender->{stitched}->{urls}[0]->{url}."\n";
+                  my $url = $sender->{stitched}->{urls}[0]->{url}."\n";
+                    $url =~ s/&deviceMake=/&deviceMake=Firefox/ig;
+                    $url =~ s/&deviceType=/&deviceType=web/ig;
+                    $url =~ s/&deviceId=unknown/&deviceId=$deviceid/ig;
+                    $url =~ s/&deviceModel=/&deviceModel=web/ig;
+                    $url =~ s/&deviceVersion=unknown/&deviceVersion=82\.0/ig;
+                    $url =~ s/&appName=&/&appName=web&/ig;
+                    $url =~ s/&appVersion=&/&appVersion=5.9.1-e0b37ef76504d23c6bdc8157813d13333dfa33a3/ig;
+                    $url =~ s/&sid=/&sid=\{uuid\}&sessionID=\{uuid\}/ig;
+                    $url =~ s/&deviceDNT=0/&deviceDNT=false/ig;
+                    $url = $url."&serverSideAds=false&terminate=false&clientDeviceType=0&clientModelNumber=na&clientID=".$deviceid;
+                    $m3u .= $url;
                 }
                 else {
                     $m3u .= "pipe://" . $ffmpeg . " -loglevel fatal -threads 2 -re -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" -c copy -fflags +genpts+ignidx+igndts -vcodec copy -acodec copy -mpegts_copyts 1 -f mpegts -tune zerolatency -mpegts_flags +initial_discontinuity -mpegts_service_type advanced_codec_digital_hdtv -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
