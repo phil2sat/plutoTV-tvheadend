@@ -182,6 +182,8 @@ sub buildM3U {
                     $url =~ s/&sid=/&sid=\{uuid\}&sessionID=\{uuid\}/ig;
                     $url =~ s/&deviceDNT=0/&deviceDNT=false/ig;
                     $url = $url."&serverSideAds=false&terminate=false&clientDeviceType=0&clientModelNumber=na&clientID=".$deviceid;
+                    my $uuid = uuid_to_string(create_uuid(UUID_V1));
+                    $url =~ s/{uuid}/$uuid/ig;
                     $m3u .= $url."\n";
                 }
                 else {
