@@ -187,7 +187,8 @@ sub buildM3U {
                     $m3u .= $url."\n";
                 }
                 else {
-                    $m3u .= "pipe://" . $ffmpeg . " -user-agent \"Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:86.0) Gecko/20100101 Firefox/86.0\" -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" -map 0 -c copy -hide_banner -nostats -loglevel 0 -f mpegts -mpegts_service_type advanced_codec_digital_hdtv -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
+                    #$m3u .= "pipe://" . $ffmpeg . " -user-agent \"Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:86.0) Gecko/20100101 Firefox/86.0\" -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" -map 0 -c copy -hide_banner -nostats -loglevel 0 -f mpegts -mpegts_service_type advanced_codec_digital_hdtv -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
+                    $m3u .= "pipe://" .$ffmpeg ." -user-agent \"Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:86.0) Gecko/20100101 Firefox/86.0\" -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" matroska pipe:1 | " .$ffmpeg. " -i - -c copy -bsf:v h264_mp4toannexb -f mpegts pipe:1\n"
                 }
             }
         }
