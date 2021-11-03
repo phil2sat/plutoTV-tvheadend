@@ -171,7 +171,7 @@ sub buildM3U {
                     $m3u .= "http://".$hostip.":$port/channel?id=$sender->{_id}\n";
                 }
                 elsif($original) {
-                  my $url = $sender->{stitched}->{urls}[0]->{url}."\n";
+                  my $url = $sender->{stitched}->{urls}[0]->{url};
                     $url =~ s/&deviceMake=/&deviceMake=Firefox/ig;
                     $url =~ s/&deviceType=/&deviceType=web/ig;
                     $url =~ s/&deviceId=unknown/&deviceId=$deviceid/ig;
