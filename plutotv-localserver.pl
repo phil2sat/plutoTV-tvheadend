@@ -171,7 +171,7 @@ sub buildM3U {
                     $m3u .= "http://".$hostip.":$port/channel?id=$sender->{_id}\n";
                 }
                 else {
-                    $m3u .= "pipe://" . $ffmpeg . " -loglevel debug -threads 2 -re -stream_loop -1 -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" -c copy -vcodec copy -acodec copy -mpegts_copyts 1 -f mpegts -tune zerolatency -c copy -flags -global_header  -avoid_negative_ts disabled -map_metadata -1 -start_at_zero -copyts -flags -global_header -vsync cfr -y -nostats -hide_banner -f hls  -hls_time 2 -hls_list_size 10  -hls_flags delete_segments  -hls_flags +append_list -hls_flags +discont_start -hls_flags +delete_segments -mpegts_service_type advanced_codec_digital_hdtv -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
+                    $m3u .= "pipe://" . $ffmpeg . " -loglevel debug -threads 2 -re -stream_loop -1 -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" -c copy -vcodec copy -acodec copy -mpegts_copyts 1 -f mpegts -tune zerolatency -flags -global_header  -avoid_negative_ts disabled -map_metadata -1 -start_at_zero -copyts -flags -global_header -vsync cfr -y -nostats -hide_banner -f hls  -hls_time 5 -hls_list_size 10  -hls_flags delete_segments  -hls_flags +append_list -hls_flags +discont_start -hls_flags +delete_segments -mpegts_service_type advanced_codec_digital_hdtv -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
                 }
             }
         }
@@ -397,7 +397,7 @@ sub stream {
         open($stream_fh, "-|", $streamlink." --stdout --ffmpeg-verbose --loglevel debug --ffmpeg-fout mpegts \"".$url."\" 720,best");
     }
     else {
-        open($stream_fh, "-|", $ffmpeg . " -loglevel debug -threads 2 -re -stream_loop -1 -i '$url' -vcodec copy -acodec copy -mpegts_copyts 1 -f mpegts -tune zerolatency -c copy -flags -global_header  -avoid_negative_ts disabled -map_metadata -1 -start_at_zero -copyts -flags -global_header -vsync cfr -y -nostats -hide_banner -f hls  -hls_time 2 -hls_list_size 10  -hls_flags delete_segments  -hls_flags +append_list -hls_flags +discont_start -hls_flags +delete_segments -mpegts_service_type advanced_codec_digital_hdtv pipe:1");
+        open($stream_fh, "-|", $ffmpeg . " -loglevel debug -threads 2 -re -stream_loop -1 -i '$url' -vcodec copy -acodec copy -mpegts_copyts 1 -f mpegts -tune zerolatency -flags -global_header  -avoid_negative_ts disabled -map_metadata -1 -start_at_zero -copyts -flags -global_header -vsync cfr -y -nostats -hide_banner -f hls  -hls_time 5 -hls_list_size 10  -hls_flags delete_segments  -hls_flags +append_list -hls_flags +discont_start -hls_flags +delete_segments -mpegts_service_type advanced_codec_digital_hdtv pipe:1");
 ## Orig        open($stream_fh, "-|", $ffmpeg . " -loglevel fatal -threads 2 -re -i '$url' -fflags +genpts+ignidx+igndts -vcodec copy -acodec copy -mpegts_copyts 1 -f mpegts -tune zerolatency -mpegts_flags +initial_discontinuity -c copy -mpegts_service_type advanced_codec_digital_hdtv pipe:1");
     }
     $client->send_header("Content-Type", "video/MP2T");
