@@ -171,7 +171,7 @@ sub buildM3U {
                     $m3u .= "http://".$hostip.":$port/channel?id=$sender->{_id}\n";
                 }
                 else {
-                    $m3u .= "pipe://" . $ffmpeg . " -loglevel debug -threads 2 -re -stream_loop -1 -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" -c copy -mpegts_copyts 1 -f mpegts -mpegts_service_type advanced_codec_digital_hdtv -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
+                    $m3u .= "pipe://" . $ffmpeg . " -loglevel fatal -re -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\"  -fflags +genpts+ignidx+igndts -vcodec copy -acodec copy -mpegts_copyts 1 -tune zerolatency -b 900k -f mpegts -mpegts_service_type advanced_codec_digital_hdtv -g 18 -video_track_timescale 30 -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
                 }
             }
         }
@@ -398,7 +398,7 @@ sub stream {
     }
     else {
         open($stream_fh, "-|", $ffmpeg . " -loglevel debug '$url' -c copy -mpegts_copyts 1 -f mpegts -mpegts_service_type advanced_codec_digital_hdtv pipe:1");
-## Orig        open($stream_fh, "-|", $ffmpeg . " -loglevel fatal -threads 2 -re -i '$url' -fflags +genpts+ignidx+igndts -vcodec copy -acodec copy -mpegts_copyts 1 -f mpegts -tune zerolatency -mpegts_flags +initial_discontinuity -c copy -mpegts_service_type advanced_codec_digital_hdtv pipe:1");
+## Orig        open($stream_fh, "-|", $ffmpeg . " -loglevel fatal -re -i '$url' -fflags +genpts+ignidx+igndts -vcodec copy -acodec copy -mpegts_copyts 1 -tune zerolatency -b 900k -f mpegts -mpegts_service_type advanced_codec_digital_hdtv -g 18 -video_track_timescale 30 pipe:1");
     }
     $client->send_header("Content-Type", "video/MP2T");
     $client->send_file($stream_fh);
