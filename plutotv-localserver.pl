@@ -171,7 +171,7 @@ sub buildM3U {
                     $m3u .= "http://".$hostip.":$port/channel?id=$sender->{_id}\n";
                 }
                 else {
-                    $m3u .= "pipe://" . $ffmpeg . " -loglevel fatal -hwaccel vaapi -hwaccel_device \"/dev/dri/renderD128\" -re -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" -map 'm:variant_bitrate:3063648' -fflags +genpts+ignidx+igndts -vf 'format=nv12\|vaapi,hwupload' -c:v h264_vaapi -pix_fmt yuv420p -profile:v main -level 4.1 -global_quality 21 -rc_mode CQP -b:v:0 5250k -acodec copy -mpegts_copyts 1 -tune zerolatency -b 900k -f mpegts -mpegts_service_type advanced_codec_digital_hdtv -g 18 -video_track_timescale 30 -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
+                    $m3u .= "pipe://" . $ffmpeg . " -loglevel fatal -hwaccel vaapi -hwaccel_device '/dev/dri/renderD128' -re -i \"http://" . $hostip . ":" . $port . "/master3u8?id=" . $sender->{_id} . "\" -map 'm:variant_bitrate:3063648' -fflags +genpts+ignidx+igndts -vf 'format=nv12\|vaapi,hwupload' -c:v h264_vaapi -pix_fmt yuv420p -profile:v main -level 4.1 -global_quality 21 -rc_mode CQP -b:v:0 5250k -acodec copy -mpegts_copyts 1 -tune zerolatency -b 900k -f mpegts -mpegts_service_type advanced_codec_digital_hdtv -g 18 -video_track_timescale 30 -metadata service_name=\"" . $sender->{name} . "\" pipe:1\n";
                 }
             }
         }
@@ -397,7 +397,7 @@ sub stream {
         open($stream_fh, "-|", $streamlink." --stdout --ffmpeg-verbose --loglevel debug --ffmpeg-fout mpegts \"".$url."\" 720,best");
     }
     else {
-        open($stream_fh, "-|", $ffmpeg . " -loglevel debug -hwaccel vaapi -hwaccel_device \"/dev/dri/renderD128"\ -re -i '$url' -map 'm:variant_bitrate:3063648' -fflags +genpts+ignidx+igndts -vf 'format=nv12\|vaapi,hwupload' -c:v h264_vaapi -pix_fmt yuv420p -profile:v main -level 4.1 -global_quality 21 -rc_mode CQP -b:v:0 5250k -acodec copy -mpegts_copyts 1 -tune zerolatency -b 900k -f mpegts -mpegts_service_type advanced_codec_digital_hdtv -g 18 -video_track_timescale 30 pipe:1");
+        open($stream_fh, "-|", $ffmpeg . " -loglevel debug -hwaccel vaapi -hwaccel_device '/dev/dri/renderD128' -re -i '$url' -map 'm:variant_bitrate:3063648' -fflags +genpts+ignidx+igndts -vf 'format=nv12\|vaapi,hwupload' -c:v h264_vaapi -pix_fmt yuv420p -profile:v main -level 4.1 -global_quality 21 -rc_mode CQP -b:v:0 5250k -acodec copy -mpegts_copyts 1 -tune zerolatency -b 900k -f mpegts -mpegts_service_type advanced_codec_digital_hdtv -g 18 -video_track_timescale 30 pipe:1");
 ## Orig        open($stream_fh, "-|", $ffmpeg . " -loglevel fatal -re -vaapi_device /dev/dri/renderD128 -i '$url' -fflags +genpts+ignidx+igndts  -vf 'format=nv12,hwupload' -c:v h264_vaapi -acodec copy -mpegts_copyts 1 -tune zerolatency -b 900k -f mpegts -mpegts_service_type advanced_codec_digital_hdtv -g 18 -video_track_timescale 30 pipe:1");
     }
     $client->send_header("Content-Type", "video/MP2T");
